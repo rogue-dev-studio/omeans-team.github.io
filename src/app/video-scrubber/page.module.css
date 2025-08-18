@@ -1,107 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Custom styles */
-@layer components {
-  .gradient-text {
-    @apply bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent;
-  }
-
-  .glass-effect {
-    @apply bg-gray-800/50 backdrop-blur-md border border-gray-700;
-  }
-
-  .button-primary {
-    @apply bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-4 px-8 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25 border-none cursor-pointer;
-  }
-
-  .button-secondary {
-    @apply border-2 border-gray-600 text-gray-300 font-bold py-4 px-8 rounded-lg transition-all duration-300 hover:scale-105 hover:border-blue-400 hover:text-blue-400 bg-transparent cursor-pointer;
-  }
-
-  .nav-link {
-    @apply relative text-gray-300 no-underline font-medium transition-all duration-300 py-2 hover:text-blue-400 hover:-translate-y-1;
-  }
-
-  .nav-link::before {
-    @apply content-[''] absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 rounded;
-  }
-
-  .nav-link:hover::before {
-    @apply w-full;
-  }
-
-  .footer-link {
-    @apply relative text-gray-400 no-underline transition-all duration-300 py-1 inline-block hover:text-blue-400 hover:translate-x-1;
-  }
-
-  .footer-link::before {
-    @apply content-[''] absolute bottom-0 left-0 w-0 h-px bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 rounded;
-  }
-
-  .footer-link:hover::before {
-    @apply w-full;
-  }
-
-  .social-link {
-    @apply relative text-gray-400 transition-all duration-300 p-2 rounded-lg bg-gray-800/30 backdrop-blur-sm hover:text-blue-400 hover:bg-blue-500/10 hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20;
-  }
-
-  .hover-glow {
-    @apply transition-all duration-300 hover:scale-105;
-  }
-
-}
-
-/* Base styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  background-color: #000000;
-  color: #ffffff;
-  line-height: 1.6;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #1f2937;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #3b82f6;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #1d4ed8;
-}
-
-/* Selection color */
-::selection {
-  background: rgba(59, 130, 246, 0.3);
-  color: white;
-}
-
-/* Focus styles */
-*:focus {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
-}
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Almendra:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Berkshire+Swash&display=swap');
 
 .videoScrubber .videoHero {
   --highlight-color: #8cc63e;
@@ -328,10 +230,8 @@ body {
 .storyText h3 {
   text-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
   letter-spacing: 0.02em;
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: 1.25;
-  text-wrap: balance;
+  font-weight: 300;
+  line-height: 1.4;
 }
 
 @keyframes cinematicGlow {

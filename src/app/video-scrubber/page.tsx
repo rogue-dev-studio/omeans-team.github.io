@@ -1,6 +1,8 @@
-"use client";
+'use client'
 
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react'
+import Link from 'next/link'
+import styles from './page.module.css'
 
 // Deterministic random number generator with fixed precision
 function seededRandom(seed: number) {
@@ -19,7 +21,7 @@ function generateParticles(count: number) {
     const delay = seededRandom(seed + 2);
     const duration = seededRandom(seed + 3);
     const opacity = seededRandom(seed + 4);
-
+    
     particles.push({
       id: i,
       left: `${(left * 100).toFixed(2)}%`,
@@ -32,8 +34,7 @@ function generateParticles(count: number) {
   return particles;
 }
 
-
-export default function Home() {
+export default function VideoScrubber() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const sectionRef = useRef<HTMLElement>(null)
   const [scrollPercentage, setScrollPercentage] = useState(0)
@@ -57,7 +58,7 @@ export default function Home() {
       // Set video to beginning and pause
       video.currentTime = 0
       video.pause()
-
+      
       // Throttle function untuk mengurangi frekuensi update
       let ticking = false
       const handleScroll = () => {
@@ -71,7 +72,7 @@ export default function Home() {
             percentage = Math.min(percentage, 1.0)
 
             setScrollPercentage(percentage)
-
+            
             // Calculate active text index for cinematic effects
             let newActiveIndex = -1
             if (percentage >= 0 && percentage < 0.1) newActiveIndex = 0
@@ -80,13 +81,13 @@ export default function Home() {
             else if (percentage >= 0.3 && percentage < 0.4) newActiveIndex = 3
             else if (percentage >= 0.4 && percentage < 0.5) newActiveIndex = 4
             else if (percentage >= 0.5 && percentage < 0.6) newActiveIndex = 5
-
+            
             if (newActiveIndex !== activeTextIndex) {
               setActiveTextIndex(newActiveIndex)
             }
 
             // Show hero image when scroll reaches 100%
-            if (percentage >= 0.8) {
+            if (percentage >= 0.9) {
               setShowHero(true)
             } else {
               setShowHero(false)
@@ -114,7 +115,7 @@ export default function Home() {
               perspective = 0.6
             }
             setVideoScale(perspective)
-
+            
             // Calculate video blur based on scroll percentage
             let blur = 0
             if (percentage >= 0.8) {
@@ -122,13 +123,13 @@ export default function Home() {
               blur = 15 // Fixed blur amount
             }
             setVideoBlur(blur)
-
+            
             // Debug logging
             console.log(`Scroll: ${(percentage * 100).toFixed(1)}%, Perspective: ${perspective.toFixed(3)}, Blur: ${blur.toFixed(1)}px, State: ${percentage > 0.9 ? 'Maintained' : percentage >= 0.7 ? 'Transitioning' : 'Normal'}`)
-
+            
             // Debug black hole
             console.log(`Black Hole visible: ${percentage < 0.6}, Size: ${holeSize.toFixed(1)}%`)
-
+            
             // Force re-render for testing
             if (video.style) {
               video.style.transform = `translateZ(0) perspective(1000px) scale(${perspective}) rotateX(${(1 - perspective) * 20}deg) translateZ(${(1 - perspective) * -200}px) translateY(${(1 - perspective) * 20}vh) scaleX(${1 + (1 - perspective)})`
@@ -141,7 +142,7 @@ export default function Home() {
               // Stop video scrubbing at 60% scroll
               const videoPercentage = Math.min(percentage, 0.6)
               video.currentTime = video.duration * videoPercentage
-
+              
               // Keep video paused - no auto play
               if (!video.paused) {
                 video.pause()
@@ -173,27 +174,26 @@ export default function Home() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-black text-white videoScrubber">
-
+    <div className={styles.videoScrubber}>
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50" style={{
         backgroundColor: 'rgba(0, 0, 0, 0.9)',
         backdropFilter: 'blur(12px)',
         borderBottom: '1px solid rgba(55, 65, 81, 0.5)'
       }}>
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="max-w-7xl mx-auto px-6 py-3">
           <div className="flex justify-between items-center">
-            <div className="text-xl md:text-2xl font-bold text-white">OMEANS</div>
-            <div className="hidden md:flex space-x-8">
-              <a href="#features" className="nav-link">FEATURES</a>
-              <a href="#team" className="nav-link">TEAM</a>
-              <a href="#services" className="nav-link">SERVICES</a>
-              <a href="#contact" className="nav-link">CONTACT</a>
-              <a href="/video-scrubber" className="nav-link">VIDEO SCRUBBER</a>
-              <a href="/youtube-scrubber" className="nav-link">YOUTUBE SCRUBBER</a>
-              <a href="/youtube-scrubber-advanced" className="nav-link">ADVANCED</a>
+            <div className="text-lg md:text-xl font-bold text-white">
+              <a href="/" className="text-white hover:text-blue-400 transition-colors">OMEANS</a>
             </div>
-            <button className="button-primary text-sm px-4 py-2">
+            <div className="hidden md:flex space-x-6">
+              <a href="/#features" className="nav-link text-sm">FEATURES</a>
+              <a href="/#team" className="nav-link text-sm">TEAM</a>
+              <a href="/#services" className="nav-link text-sm">SERVICES</a>
+              <a href="/#contact" className="nav-link text-sm">CONTACT</a>
+              <a href="/video-scrubber" className="nav-link text-sm">VIDEO SCRUBBER</a>
+            </div>
+            <button className="button-primary text-xs px-3 py-1.5">
               GET STARTED
             </button>
           </div>
@@ -201,17 +201,16 @@ export default function Home() {
       </nav>
 
       {/* Video Scrubber Section */}
-      <section ref={sectionRef} className="videoHero">
-        <div className="heroVideo">
-          <video
+      <section ref={sectionRef} className={styles.videoHero}>
+        <div className={styles.heroVideo}>
+          <video 
             ref={videoRef}
-            src="/video-scrubber/vid.mp4"
-            // src="https://www.youtube.com/embed/itvR7TQnWl0?si=SoHAh5AeuOQ0HSN_"
-            muted
+            src="/video-scrubber/vid.mp4" 
+            muted 
             playsInline
             preload="auto"
             crossOrigin="anonymous"
-            className="heroVideo"
+            className={styles.heroVideo}
             style={{
               transform: `translateZ(0) perspective(1000px) scale(${videoScale}) rotateX(${(1 - videoScale) * 20}deg) translateZ(${(1 - videoScale) * -200}px) translateY(${(1 - videoScale) * 20}vh) scaleX(${1 + (1 - videoScale)})`,
               transformOrigin: 'center bottom',
@@ -220,20 +219,20 @@ export default function Home() {
               filter: `blur(${videoBlur}px)`
             }}
           />
-
+          
           {/* Animated Background */}
-          <div className="animatedBackground">
-            <div className="gradientOverlay"></div>
-            <div className="radialGradient1"></div>
-            <div className="radialGradient2"></div>
+          <div className={styles.animatedBackground}>
+            <div className={styles.gradientOverlay}></div>
+            <div className={styles.radialGradient1}></div>
+            <div className={styles.radialGradient2}></div>
           </div>
-
+          
           {/* Floating Particles Effect */}
-          <div className="particlesContainer">
+          <div className={styles.particlesContainer}>
             {particles.map((particle) => (
               <div
                 key={particle.id}
-                className="particle"
+                className={styles.particle}
                 style={{
                   left: particle.left,
                   top: particle.top,
@@ -244,149 +243,142 @@ export default function Home() {
               ></div>
             ))}
           </div>
-
+          
           {scrollPercentage < 0.6 && (
-            <div
-              className="blackHole"
+            <div 
+              className={styles.blackHole}
               style={{
                 '--hole-size': `${blackHoleSize}%`
               } as React.CSSProperties}
             />
           )}
-
+          
           {/* Hero Image Overlay */}
           {showHero && (
-            <div className="heroOverlay">
-
+            <div className={styles.heroOverlay}>
+              
               {/* Hero Content Overlay */}
-              <div className="heroContentOverlay">
-                {/* Hero Content */}
-                <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
-                  <div className="mb-12">
-                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 gradient-text">
-                      OMEANS
-                    </h1>
-                    <h2 className="text-xl md:text-3xl lg:text-4xl font-light text-gray-300 mb-8">
-                      ENGINE
-                    </h2>
-                  </div>
-
-                  <p className="text-lg md:text-xl lg:text-2xl text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed">
-                    The most powerful and accessible real-time 3D creation tool.
-                    <br />
-                    <span className="text-blue-400">Built by developers, for developers.</span>
-                  </p>
-
-                  <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                    <button className="button-primary">
-                      DOWNLOAD NOW
-                    </button>
-                    <button className="button-secondary">
-                      LEARN MORE
-                    </button>
-                  </div>
+              <div className={styles.heroContentOverlay}>
+                <div className={styles.heroTitle}>
+                  <h1 className={styles.gradientText}>OMEANS</h1>
+                  <h2 className={styles.engineText}>ENGINE</h2>
+                </div>
+                
+                <p className={styles.heroDescription}>
+                  The most powerful and accessible real-time 3D creation tool.
+                  <br />
+                  <span className={styles.highlightText}>Built by developers, for developers.</span>
+                </p>
+                
+                <div className={styles.heroButtons}>
+                  <button className={styles.buttonPrimary}>
+                    DOWNLOAD NOW
+                  </button>
+                  <button className={styles.buttonSecondary}>
+                    LEARN MORE
+                  </button>
                 </div>
               </div>
             </div>
           )}
-
+          
           {scrollPercentage < 0.6 && (
-            <div
-              className="germanGothicO"
+            <div 
+              className={styles.germanGothicO}
               style={{
                 opacity: 1 - (scrollPercentage * 1.67), // Hilang pada 60% scroll
                 transform: `translate(-50%, -50%) scale(${1 + (scrollPercentage * 2)})` // Semakin besar saat scroll
               }}
             >
-              <svg
-                viewBox="0 0 100 100"
-                width="500"
-                height="500"
-                style={{ display: 'block' }}
-              >
-                {/* Blackletter O - very thick version */}
-                {/* Background fill for thickness */}
-                <rect x="20" y="15" width="60" height="70" fill="black" opacity="0.1" />
-
-                {/* Left vertical stem - main */}
-                <path
-                  d="M25 20 L25 80"
-                  stroke="black"
-                  strokeWidth="12"
-                  strokeLinecap="square"
-                />
-                {/* Right vertical stem - main */}
-                <path
-                  d="M75 20 L75 80"
-                  stroke="black"
-                  strokeWidth="12"
-                  strokeLinecap="square"
-                />
-
-                {/* Top angular connection */}
-                <path
-                  d="M25 20 L50 10 L75 20"
-                  stroke="black"
-                  strokeWidth="10"
-                  fill="none"
-                  strokeLinecap="square"
-                />
-                {/* Bottom angular connection */}
-                <path
-                  d="M25 80 L50 90 L75 80"
-                  stroke="black"
-                  strokeWidth="10"
-                  fill="none"
-                  strokeLinecap="square"
-                />
-
-                {/* Additional thickness layers */}
-                <path
-                  d="M22 25 L22 75"
-                  stroke="black"
-                  strokeWidth="14"
-                  strokeLinecap="square"
-                  opacity="0.4"
-                />
-                <path
-                  d="M78 25 L78 75"
-                  stroke="black"
-                  strokeWidth="14"
-                  strokeLinecap="square"
-                  opacity="0.4"
-                />
-
-                {/* Inner details for texture */}
-                <path
-                  d="M30 25 L30 75"
-                  stroke="black"
-                  strokeWidth="6"
-                  opacity="0.8"
-                />
-                <path
-                  d="M70 25 L70 75"
-                  stroke="black"
-                  strokeWidth="6"
-                  opacity="0.8"
-                />
-
-                {/* Extra thickness for solid look */}
-                <path
-                  d="M18 30 L18 70"
-                  stroke="black"
-                  strokeWidth="16"
-                  strokeLinecap="square"
-                  opacity="0.2"
-                />
-                <path
-                  d="M82 30 L82 70"
-                  stroke="black"
-                  strokeWidth="16"
-                  strokeLinecap="square"
-                  opacity="0.2"
-                />
-              </svg>
-            </div>
+            <svg 
+              viewBox="0 0 100 100" 
+              width="500" 
+              height="500"
+              style={{ display: 'block' }}
+            >
+              {/* Blackletter O - very thick version */}
+              {/* Background fill for thickness */}
+              <rect x="20" y="15" width="60" height="70" fill="black" opacity="0.1"/>
+              
+              {/* Left vertical stem - main */}
+              <path 
+                d="M25 20 L25 80" 
+                stroke="black" 
+                strokeWidth="12"
+                strokeLinecap="square"
+              />
+              {/* Right vertical stem - main */}
+              <path 
+                d="M75 20 L75 80" 
+                stroke="black" 
+                strokeWidth="12"
+                strokeLinecap="square"
+              />
+              
+              {/* Top angular connection */}
+              <path 
+                d="M25 20 L50 10 L75 20" 
+                stroke="black" 
+                strokeWidth="10"
+                fill="none"
+                strokeLinecap="square"
+              />
+              {/* Bottom angular connection */}
+              <path 
+                d="M25 80 L50 90 L75 80" 
+                stroke="black" 
+                strokeWidth="10"
+                fill="none"
+                strokeLinecap="square"
+              />
+              
+              {/* Additional thickness layers */}
+              <path 
+                d="M22 25 L22 75" 
+                stroke="black" 
+                strokeWidth="14"
+                strokeLinecap="square"
+                opacity="0.4"
+              />
+              <path 
+                d="M78 25 L78 75" 
+                stroke="black" 
+                strokeWidth="14"
+                strokeLinecap="square"
+                opacity="0.4"
+              />
+              
+              {/* Inner details for texture */}
+              <path 
+                d="M30 25 L30 75" 
+                stroke="black" 
+                strokeWidth="6"
+                opacity="0.8"
+              />
+              <path 
+                d="M70 25 L70 75" 
+                stroke="black" 
+                strokeWidth="6"
+                opacity="0.8"
+              />
+              
+              {/* Extra thickness for solid look */}
+              <path 
+                d="M18 30 L18 70" 
+                stroke="black" 
+                strokeWidth="16"
+                strokeLinecap="square"
+                opacity="0.2"
+              />
+              <path 
+                d="M82 30 L82 70" 
+                stroke="black" 
+                strokeWidth="16"
+                strokeLinecap="square"
+                opacity="0.2"
+              />
+            </svg>
+          </div>
           )}
         </div>
       </section>
@@ -673,67 +665,67 @@ export default function Home() {
       </footer>
 
       {/* Story Text - Moved outside video container */}
-      <div className="story">
+      <div className={styles.story}>
           {/* Story Text 1 */}
-          <div className={`storyText ${activeTextIndex === 0 ? 'active' : ''}`} style={{ 
+          <div className={`${styles.storyText} ${activeTextIndex === 0 ? styles.active : ''}`} style={{ 
             opacity: scrollPercentage >= 0 && scrollPercentage < 0.1 ? 1 : 0,
             transform: `translateY(${scrollPercentage >= 0 && scrollPercentage < 0.1 ? 0 : 40}px) scale(${scrollPercentage >= 0 && scrollPercentage < 0.1 ? 1 : 0.9}) rotateX(${scrollPercentage >= 0 && scrollPercentage < 0.1 ? 0 : 5}deg)`,
             transition: 'all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             filter: `blur(${scrollPercentage >= 0 && scrollPercentage < 0.1 ? 0 : 3}px) brightness(${scrollPercentage >= 0 && scrollPercentage < 0.1 ? 1 : 0.8})`
           }}>
-            <h3 className="gradientText">Welcome to Omeans Engine&hellip;</h3>
+            <h3 className={styles.gradientText}>Welcome to Omeans Engine&hellip;</h3>
           </div>
           
           {/* Story Text 2 */}
-          <div className={`storyText ${activeTextIndex === 1 ? 'active' : ''}`} style={{ 
+          <div className={`${styles.storyText} ${activeTextIndex === 1 ? styles.active : ''}`} style={{ 
             opacity: scrollPercentage >= 0.1 && scrollPercentage < 0.2 ? 1 : 0,
             transform: `translateY(${scrollPercentage >= 0.1 && scrollPercentage < 0.2 ? 0 : 40}px) scale(${scrollPercentage >= 0.1 && scrollPercentage < 0.2 ? 1 : 0.9}) rotateX(${scrollPercentage >= 0.1 && scrollPercentage < 0.2 ? 0 : 5}deg)`,
             transition: 'all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             filter: `blur(${scrollPercentage >= 0.1 && scrollPercentage < 0.2 ? 0 : 3}px) brightness(${scrollPercentage >= 0.1 && scrollPercentage < 0.2 ? 1 : 0.8})`
           }}>
-            <h3 className="gradientText">&hellip;where innovation meets creativity.</h3>
+            <h3 className={styles.gradientText}>&hellip;where innovation meets creativity.</h3>
           </div>
           
           {/* Story Text 3 */}
-          <div className={`storyText ${activeTextIndex === 2 ? 'active' : ''}`} style={{ 
+          <div className={`${styles.storyText} ${activeTextIndex === 2 ? styles.active : ''}`} style={{ 
             opacity: scrollPercentage >= 0.2 && scrollPercentage < 0.3 ? 1 : 0,
             transform: `translateY(${scrollPercentage >= 0.2 && scrollPercentage < 0.3 ? 0 : 40}px) scale(${scrollPercentage >= 0.2 && scrollPercentage < 0.3 ? 1 : 0.9}) rotateX(${scrollPercentage >= 0.2 && scrollPercentage < 0.3 ? 0 : 5}deg)`,
             transition: 'all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             filter: `blur(${scrollPercentage >= 0.2 && scrollPercentage < 0.3 ? 0 : 3}px) brightness(${scrollPercentage >= 0.2 && scrollPercentage < 0.3 ? 1 : 0.8})`
           }}>
-            <h3 className="gradientText">We build the future of development tools.</h3>
+            <h3 className={styles.gradientText}>We build the future of development tools.</h3>
           </div>
           
           {/* Story Text 4 */}
-          <div className={`storyText ${activeTextIndex === 3 ? 'active' : ''}`} style={{ 
+          <div className={`${styles.storyText} ${activeTextIndex === 3 ? styles.active : ''}`} style={{ 
             opacity: scrollPercentage >= 0.3 && scrollPercentage < 0.4 ? 1 : 0,
             transform: `translateY(${scrollPercentage >= 0.3 && scrollPercentage < 0.4 ? 0 : 40}px) scale(${scrollPercentage >= 0.3 && scrollPercentage < 0.4 ? 1 : 0.9}) rotateX(${scrollPercentage >= 0.3 && scrollPercentage < 0.4 ? 0 : 5}deg)`,
             transition: 'all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             filter: `blur(${scrollPercentage >= 0.3 && scrollPercentage < 0.4 ? 0 : 3}px) brightness(${scrollPercentage >= 0.3 && scrollPercentage < 0.4 ? 1 : 0.8})`
           }}>
-            <h3 className="gradientText">Powerful, accessible, and</h3>
+            <h3 className={styles.gradientText}>Powerful, accessible, and</h3>
           </div>
           
           {/* Story Text 5 */}
-          <div className={`storyText ${activeTextIndex === 4 ? 'active' : ''}`} style={{ 
+          <div className={`${styles.storyText} ${activeTextIndex === 4 ? styles.active : ''}`} style={{ 
             opacity: scrollPercentage >= 0.4 && scrollPercentage < 0.5 ? 1 : 0,
             transform: `translateY(${scrollPercentage >= 0.4 && scrollPercentage < 0.5 ? 0 : 40}px) scale(${scrollPercentage >= 0.4 && scrollPercentage < 0.5 ? 1 : 0.9}) rotateX(${scrollPercentage >= 0.4 && scrollPercentage < 0.5 ? 0 : 5}deg)`,
             transition: 'all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             filter: `blur(${scrollPercentage >= 0.4 && scrollPercentage < 0.5 ? 0 : 3}px) brightness(${scrollPercentage >= 0.4 && scrollPercentage < 0.5 ? 1 : 0.8})`
           }}>
-            <h3 className="gradientText">built for developers.</h3>
+            <h3 className={styles.gradientText}>built for developers.</h3>
           </div>
           
           {/* Story Text 6 */}
-          <div className={`storyText ${activeTextIndex === 5 ? 'active' : ''}`} style={{ 
+          <div className={`${styles.storyText} ${activeTextIndex === 5 ? styles.active : ''}`} style={{ 
             opacity: scrollPercentage >= 0.5 && scrollPercentage < 0.6 ? 1 : 0,
             transform: `translateY(${scrollPercentage >= 0.5 && scrollPercentage < 0.6 ? 0 : 40}px) scale(${scrollPercentage >= 0.5 && scrollPercentage < 0.6 ? 1 : 0.9}) rotateX(${scrollPercentage >= 0.5 && scrollPercentage < 0.6 ? 0 : 5}deg)`,
             transition: 'all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             filter: `blur(${scrollPercentage >= 0.5 && scrollPercentage < 0.6 ? 0 : 3}px) brightness(${scrollPercentage >= 0.5 && scrollPercentage < 0.6 ? 1 : 0.8})`
           }}>
-            <h3 className="gradientText">Experience the next generation of 3D creation.</h3>
+            <h3 className={styles.gradientText}>Experience the next generation of 3D creation.</h3>
           </div>
       </div>
     </div>
-  );
-}
+  )
+} 
